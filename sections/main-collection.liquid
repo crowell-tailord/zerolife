@@ -1,0 +1,128 @@
+{%- paginate collection.products by 12 -%}
+<section class="py-8 px-6 max-w-7xl mx-auto space-y-12">
+  
+  <!-- Collection Header -->
+  <div class="border-b border-white pb-8 space-y-4">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div class="space-y-1">
+        <span class="text-xs font-mono text-neutral-400 uppercase">// INDEX_CATALOG: {{ collection.products_count }} PRODUCTS</span>
+        <h1 class="text-3xl md:text-4xl font-mono font-bold tracking-tight text-white uppercase">
+          {{ collection.title }}
+        </h1>
+      </div>
+      {%- if collection.description != blank -%}
+        <div class="max-w-md text-xs font-mono text-neutral-400 leading-relaxed">
+          {{ collection.description }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Product Grid -->
+  {%- if collection.products.size > 0 -%}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {%- for product in collection.products -%}
+        <div class="group flex flex-col bg-black border border-white rounded-none overflow-hidden transition-colors">
+          
+          <!-- Image Container -->
+          <div class="relative aspect-square bg-black border-b border-white overflow-hidden flex items-center justify-center">
+            <a href="{{ product.url }}" class="w-full h-full block">
+              {%- if product.featured_image -%}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 500 }}" 
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="w-full h-full object-cover object-center group-hover:opacity-80 transition-opacity"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              {%- else -%}
+                <div class="w-full h-full flex items-center justify-center text-neutral-600 text-xs font-mono">
+                  [ NO IMAGE ]
+                </div>
+              {%- endif -%}
+            </a>
+
+            <!-- Sale Tag -->
+            {%- if product.compare_at_price > product.price -%}
+              <span class="absolute top-3 left-3 bg-white text-black text-[10px] font-mono font-bold px-2 py-0.5 rounded-none uppercase">
+                SALE
+              </span>
+            {%- endif -%}
+          </div>
+
+          <!-- Content -->
+          <div class="p-4 flex flex-col flex-grow justify-between gap-4">
+            <div class="space-y-1">
+              {%- if product.vendor -%}
+                <span class="text-[10px] font-mono text-neutral-400 uppercase">{{ product.vendor }}</span>
+              {%- endif -%}
+              <h3 class="font-mono text-sm font-bold text-white uppercase group-hover:underline line-clamp-2">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+            </div>
+
+            <!-- Price & Button -->
+            <div class="flex items-center justify-between gap-2 border-t border-neutral-900 pt-4 mt-auto">
+              <div class="flex flex-col font-mono text-xs">
+                <span class="font-bold text-white">{{ product.price | money }}</span>
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="text-neutral-500 line-through">{{ product.compare_at_price | money }}</span>
+                {%- endif -%}
+              </div>
+              <a 
+                href="{{ product.url }}" 
+                class="bg-white text-black hover:bg-neutral-200 px-3 py-1.5 text-xs font-mono font-bold transition-colors uppercase rounded-none"
+              >
+                VIEW
+              </a>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <!-- Pagination -->
+    {%- if paginate.pages > 1 -%}
+      <div class="flex items-center justify-center gap-2 pt-8 border-t border-neutral-800 font-mono text-xs">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="px-4 py-2 border border-white rounded-none hover:bg-white hover:text-black transition-colors">&lt; PREV</a>
+        {%- endif -%}
+
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}
+            <a href="{{ part.url }}" class="px-3.5 py-2 border border-white rounded-none hover:bg-white hover:text-black transition-colors">{{ part.title }}</a>
+          {%- else -%}
+            {%- if part.title == paginate.current_page -%}
+              <span class="px-3.5 py-2 border border-white text-black bg-white font-bold rounded-none">{{ part.title }}</span>
+            {%- else -%}
+              <span class="px-3.5 py-2 text-neutral-600">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="px-4 py-2 border border-white rounded-none hover:bg-white hover:text-black transition-colors font-mono">NEXT &gt;</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  {%- else -%}
+    <!-- Empty State -->
+    <div class="py-24 border border-dashed border-white rounded-none flex flex-col items-center justify-center text-center space-y-4">
+      <div class="text-xs font-mono text-neutral-500">// CATALOG EMPTY</div>
+      <p class="text-xs font-mono text-neutral-400 max-w-xs">This collection currently contains no products.</p>
+      <a href="/collections/all" class="bg-white text-black font-mono font-bold text-xs px-6 py-3 rounded-none transition-colors uppercase">
+        RESET
+      </a>
+    </div>
+  {%- endif -%}
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Main Collection List",
+  "settings": []
+}
+{% endschema %}

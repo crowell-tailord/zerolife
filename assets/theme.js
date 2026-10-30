@@ -1,0 +1,1 @@
+console.log("Zerolife Theme initialized successfully.");document.addEventListener("DOMContentLoaded",()=>{const e=document.getElementById("mobile-menu-toggle"),t=document.getElementById("mobile-menu-drawer");e&&t&&e.addEventListener("click",()=>{t.classList.toggle("hidden")})});

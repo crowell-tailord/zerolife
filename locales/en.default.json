@@ -1,0 +1,11 @@
+{
+  "general": {
+    "skip_to_content": "Skip to content",
+    "search": "Search"
+  },
+  "sections": {
+    "header": {
+      "menu": "Menu"
+    }
+  }
+}

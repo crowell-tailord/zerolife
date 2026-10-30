@@ -1,0 +1,55 @@
+<section class="min-h-[60vh] flex flex-col items-center justify-center text-center p-6 max-w-xl mx-auto space-y-8">
+  <!-- Neon Warning Flag -->
+  <div class="relative inline-flex items-center justify-center p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-rose-500">
+    <svg class="w-12 h-12 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+    </svg>
+    <div class="absolute -top-2 -right-2 w-4 h-4 bg-rose-500 rounded-full animate-ping"></div>
+  </div>
+
+  <!-- Error Text -->
+  <div class="space-y-3">
+    <span class="text-xs font-mono text-rose-500 tracking-widest uppercase font-bold">// CRITICAL_SYSTEM_ERROR</span>
+    <h1 class="text-5xl md:text-7xl font-mono font-black tracking-tighter text-slate-100">
+      404
+    </h1>
+    <h2 class="text-lg font-mono font-bold text-slate-300 uppercase tracking-tight">
+      ROUTE_NOT_RESOLVED
+    </h2>
+    <p class="text-xs font-mono text-slate-500 max-w-sm mx-auto leading-relaxed">
+      The requested address does not map to any active neural node or product listing. Check your coordinates and retry connection.
+    </p>
+  </div>
+
+  <!-- Diagnosis log -->
+  <div class="w-full bg-slate-950 border border-slate-900 rounded-xl p-4 text-left font-mono text-[10px] text-slate-600 space-y-1">
+    <p class="text-emerald-500">// DIAGNOSTIC_LOG_INITIALIZED</p>
+    <p>REQUEST_URI: {{ request.path }}</p>
+    <p>SESSION_LOCALE: {{ request.locale.iso_code }}</p>
+    <p>STATUS_CODE: 404 (NOT_FOUND)</p>
+    <p class="text-rose-400">ERROR_RESOLVER: TERMINATION_SEQUENCE_ACTIVE</p>
+  </div>
+
+  <!-- Call to action -->
+  <div class="flex flex-col sm:flex-row gap-3 w-full">
+    <a 
+      href="{{ routes.root_url }}" 
+      class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono font-bold text-xs py-3.5 rounded-xl transition-all uppercase"
+    >
+      RETURN_TO_BASE
+    </a>
+    <a 
+      href="/collections/all" 
+      class="flex-1 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 font-mono text-xs py-3.5 rounded-xl transition-all uppercase"
+    >
+      SCAN_CATALOG
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main 404 Error",
+  "settings": []
+}
+{% endschema %}

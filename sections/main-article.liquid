@@ -1,0 +1,60 @@
+<article class="py-8 md:py-16 px-4 max-w-3xl mx-auto space-y-8">
+  
+  <!-- Back to blog link -->
+  <div>
+    <a href="{{ blog.url }}" class="inline-flex items-center text-xs font-mono text-slate-500 hover:text-emerald-400 transition-colors uppercase">
+      &lt; BACK TO {{ blog.title | uppercase }}
+    </a>
+  </div>
+
+  <!-- Header -->
+  <div class="space-y-4">
+    <div class="flex items-center gap-3 font-mono text-[10px] text-slate-500">
+      <span>{{ article.published_at | date: "%Y-%m-%d" }}</span>
+      <span>•</span>
+      <span class="uppercase">BY {{ article.author }}</span>
+    </div>
+    <h1 class="text-3xl md:text-5xl font-mono font-black tracking-tight text-slate-100 uppercase">
+      {{ article.title }}
+    </h1>
+  </div>
+
+  <!-- Featured Image banner -->
+  {%- if article.image -%}
+    <div class="w-full aspect-[16/9] rounded-2xl overflow-hidden border border-slate-900 bg-slate-950">
+      <img 
+        src="{{ article.image | image_url: width: 1200 }}" 
+        alt="{{ article.image.alt | escape }}"
+        class="w-full h-full object-cover"
+        loading="eager"
+        width="800"
+        height="450"
+      >
+    </div>
+  {%- endif -%}
+
+  <!-- Article Rich Content -->
+  <div class="prose prose-invert max-w-none text-slate-300 text-sm md:text-base leading-relaxed font-sans space-y-6">
+    {{ article.content }}
+  </div>
+
+  <!-- Footer block / tags -->
+  {%- if article.tags.size > 0 -%}
+    <div class="border-t border-slate-900 pt-6 mt-12 flex flex-wrap gap-2">
+      <span class="text-xs font-mono text-slate-500 uppercase self-center">// TAGS:</span>
+      {%- for tag in article.tags -%}
+        <span class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] font-mono px-2.5 py-1 rounded-full uppercase">
+          {{ tag }}
+        </span>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+</article>
+
+{% schema %}
+{
+  "name": "Main Article Detail",
+  "settings": []
+}
+{% endschema %}

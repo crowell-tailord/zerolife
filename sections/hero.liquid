@@ -1,0 +1,95 @@
+<section class="relative min-h-[50vh] flex items-center justify-center bg-black border-b border-white py-16 px-6">
+  <div class="max-w-5xl mx-auto text-center space-y-8 flex flex-col items-center">
+    
+    <!-- kicker -->
+    {%- if section.settings.kicker != blank -%}
+      <div class="font-mono text-xs tracking-widest text-neutral-400 uppercase">
+        // {{ section.settings.kicker }}
+      </div>
+    {%- endif -%}
+
+    <!-- Main Title -->
+    <div class="space-y-4 max-w-4xl">
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-sans font-black tracking-tight text-white uppercase leading-none">
+        {{ section.settings.heading | default: 'MINIMALIST GOODS. PURE DESIGN.' }}
+      </h1>
+      {%- if section.settings.subheading != blank -%}
+        <p class="text-sm sm:text-base font-mono text-neutral-400 max-w-xl mx-auto leading-relaxed">
+          {{ section.settings.subheading }}
+        </p>
+      {%- endif -%}
+    </div>
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+      <a 
+        href="{{ section.settings.primary_button_link | default: '/collections/all' }}" 
+        class="bg-white hover:bg-neutral-200 text-black font-mono font-bold text-xs uppercase px-8 py-3 transition-colors text-center rounded-none"
+      >
+        {{ section.settings.primary_button_label | default: 'EXPLORE CATALOG' }}
+      </a>
+      {%- if section.settings.secondary_button_label != blank -%}
+        <a 
+          href="{{ section.settings.secondary_button_link | default: '/' }}" 
+          class="bg-black border border-white hover:bg-neutral-900 text-white font-mono font-bold text-xs uppercase px-8 py-3 transition-colors text-center rounded-none"
+        >
+          {{ section.settings.secondary_button_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Static Hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker (Over-title)",
+      "default": "SYSTEM_STATUS: ONLINE"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "MINIMALIST GOODS. PURE DESIGN."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Base wireframe template. Ready for customization."
+    },
+    {
+      "type": "text",
+      "id": "primary_button_label",
+      "label": "Primary Button Label",
+      "default": "EXPLORE CATALOG"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_link",
+      "label": "Primary Button Link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary Button Label",
+      "default": "CATALOG"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Static Hero"
+    }
+  ]
+}
+{% endschema %}

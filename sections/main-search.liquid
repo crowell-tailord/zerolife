@@ -1,0 +1,142 @@
+<section class="py-8 md:py-16 px-4 max-w-7xl mx-auto space-y-12">
+  
+  <!-- Header & Search Box -->
+  <div class="border-b border-slate-900 pb-8 space-y-6">
+    <div class="space-y-2">
+      <span class="text-xs font-mono tracking-widest text-emerald-400 uppercase">// SEARCH_ENGINE: ACCESS_QUERY</span>
+      <h1 class="text-3xl md:text-5xl font-mono font-black tracking-tight text-slate-100 uppercase">
+        {%- if search.performed -%}
+          SEARCH_RESULTS
+        {%- else -%}
+          SEARCH_THE_SYSTEM
+        {%- endif -%}
+      </h1>
+    </div>
+
+    <!-- Search Form -->
+    <form action="{{ routes.search_url }}" method="get" class="max-w-xl flex">
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="ENTER_QUERY..." 
+        value="{{ search.terms | escape }}"
+        class="flex-grow bg-slate-900 border border-slate-800 rounded-l-xl px-4 py-3 text-sm font-mono focus:outline-none focus:border-emerald-500 text-slate-100"
+      >
+      <button 
+        type="submit" 
+        class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-6 rounded-r-xl font-mono text-xs font-bold transition-all uppercase"
+      >
+        SEARCH
+      </button>
+    </form>
+  </div>
+
+  <!-- Results -->
+  {%- if search.performed -%}
+    {%- paginate search.results by 12 -%}
+      
+      {%- if search.results_count > 0 -%}
+        <div class="space-y-4">
+          <div class="text-xs font-mono text-slate-500">// FOUND: {{ search.results_count }} MATCHES IN SYSTEM database</div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {%- for item in search.results -%}
+              
+              <!-- Check if it is a product, else handle as standard page/post -->
+              {%- if item.object_type == 'product' -%}
+                <div class="group relative flex flex-col bg-slate-950/45 border border-slate-900 rounded-2xl overflow-hidden hover:border-emerald-500/50 transition-all duration-300">
+                  <div class="relative aspect-square bg-slate-950 overflow-hidden flex items-center justify-center">
+                    <a href="{{ item.url }}" class="w-full h-full">
+                      {%- if item.featured_image -%}
+                        <img 
+                          src="{{ item.featured_image | image_url: width: 500 }}" 
+                          alt="{{ item.featured_image.alt | escape }}"
+                          class="w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          width="300"
+                          height="300"
+                        >
+                      {%- else -%}
+                        <div class="w-full h-full flex items-center justify-center text-slate-700 text-xs font-mono">// NO_IMAGE_AVAILABLE</div>
+                      {%- endif -%}
+                    </a>
+                  </div>
+                  <div class="p-5 flex flex-col flex-grow justify-between gap-4">
+                    <div class="space-y-1">
+                      <span class="text-[10px] font-mono tracking-widest text-slate-500 uppercase">// PRODUCT</span>
+                      <h3 class="font-mono text-sm font-bold tracking-tight text-slate-200 group-hover:text-emerald-400 transition-colors uppercase line-clamp-1">
+                        <a href="{{ item.url }}">{{ item.title }}</a>
+                      </h3>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 border-t border-slate-900/60 pt-4 mt-auto">
+                      <span class="text-sm font-bold font-mono text-slate-100">{{ item.price | money }}</span>
+                      <a href="{{ item.url }}" class="bg-slate-900 border border-slate-800 hover:bg-emerald-500 hover:border-emerald-500 hover:text-slate-950 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono transition-all uppercase">VIEW</a>
+                    </div>
+                  </div>
+                </div>
+
+              {%- else -%}
+                <!-- Non-product page result -->
+                <div class="flex flex-col justify-between p-5 bg-slate-950/45 border border-slate-900 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+                  <div class="space-y-2">
+                    <span class="text-[10px] font-mono tracking-widest text-slate-500 uppercase">// {{ item.object_type | uppercase }}</span>
+                    <h3 class="font-mono text-sm font-bold text-slate-200 hover:text-emerald-400 transition-colors uppercase line-clamp-1">
+                      <a href="{{ item.url }}">{{ item.title }}</a>
+                    </h3>
+                    <p class="text-xs text-slate-400 line-clamp-2 font-sans">{{ item.content | strip_html | truncate: 150 }}</p>
+                  </div>
+                  <a href="{{ item.url }}" class="mt-4 inline-block text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors uppercase">
+                    OPEN_LINK &gt;
+                  </a>
+                </div>
+              {%- endif -%}
+
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        {%- if paginate.pages > 1 -%}
+          <div class="flex items-center justify-center gap-2 pt-8 border-t border-slate-900 font-mono text-xs">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="px-4 py-2 border border-slate-800 rounded-lg hover:border-emerald-500 hover:text-emerald-400 transition-colors">&lt; PREV</a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="px-3.5 py-2 border border-slate-800 rounded-lg hover:border-emerald-500 hover:text-emerald-400 transition-colors">{{ part.title }}</a>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <span class="px-3.5 py-2 border border-emerald-500/35 text-emerald-400 rounded-lg bg-emerald-500/5">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="px-3.5 py-2 text-slate-600">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="px-4 py-2 border border-slate-800 rounded-lg hover:border-emerald-500 hover:text-emerald-400 transition-colors">NEXT &gt;</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+      {%- else -%}
+        <!-- Zero results -->
+        <div class="py-24 border border-dashed border-slate-900 rounded-3xl flex flex-col items-center justify-center text-center space-y-4">
+          <div class="text-xs font-mono text-slate-600">// SCAN_COMPLETED: 0_ENTRIES_FOUND</div>
+          <p class="text-sm text-slate-400 max-w-xs">No records matched the system search query: "{{ search.terms }}".</p>
+          <a href="/collections/all" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono font-bold text-xs px-6 py-3 rounded-xl transition-all">
+            LOAD_ALL_PRODUCTS
+          </a>
+        </div>
+      {%- endif -%}
+
+    {%- endpaginate -%}
+  {%- endif -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "Main Search Results",
+  "settings": []
+}
+{% endschema %}

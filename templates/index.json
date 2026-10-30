@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "kicker": "SYSTEM_STATUS: ONLINE",
+        "heading": "NEXT-GEN CYBERNETIC EQUIP",
+        "subheading": "Gear up with professional cybernetic enhancements, high-fidelity apparel, and custom hardware. Powered by Zerolife neural matrices.",
+        "primary_button_label": "EXPLORE CATALOG",
+        "primary_button_link": "/collections/all",
+        "secondary_button_label": "LAUNCH CUSTOMIZER",
+        "secondary_button_link": "/pages/customizer"
+      }
+    },
+    "featured_products": {
+      "type": "featured-collection",
+      "settings": {
+        "title": "FEATURED EQUIPMENT",
+        "products_to_show": 4
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured_products"
+  ]
+}

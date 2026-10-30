@@ -1,0 +1,25 @@
+<div class="w-full bg-slate-950 py-12 md:py-16">
+  <div id="landing-game-root" class="w-full min-h-[500px] flex items-center justify-center">
+    <div class="text-center space-y-4">
+      <div class="w-12 h-12 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      <p class="text-slate-400 font-mono text-sm tracking-wider animate-pulse">// LOADING CYBER MATRIX CORE...</p>
+    </div>
+  </div>
+</div>
+
+{% comment %} Load our compiled React bundle exclusively in this section {% endcomment %}
+<script src="{{ 'landing-game.js' | asset_url }}" defer="defer" type="module"></script>
+
+{% schema %}
+{
+  "name": "Neural Customizer",
+  "tag": "section",
+  "class": "section-landing-game",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Neural Customizer"
+    }
+  ]
+}
+{% endschema %}

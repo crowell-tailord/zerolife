@@ -1,0 +1,185 @@
+<section class="py-8 px-6 max-w-7xl mx-auto space-y-8">
+  
+  <!-- Header -->
+  <div class="border-b border-white pb-6">
+    <span class="text-xs font-mono text-neutral-400 uppercase">// BASKET_ALLOCATION: CART</span>
+    <h1 class="text-3xl font-mono font-bold tracking-tight text-white uppercase">
+      SHOPPING CART
+    </h1>
+  </div>
+
+  {%- if cart.item_count > 0 -%}
+    <form action="{{ routes.cart_url }}" method="post" id="CartForm" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Cart Items list (Left Side - 2 cols on lg) -->
+      <div class="lg:col-span-2 space-y-4">
+        {%- for item in cart.items -%}
+          <div class="flex flex-col sm:flex-row gap-4 p-5 bg-black border border-white rounded-none relative">
+            
+            <!-- Remove Button Top-Right -->
+            <a 
+              href="/cart/change?line={{ forloop.index }}&quantity=0" 
+              class="absolute top-4 right-4 text-neutral-400 hover:text-white"
+              aria-label="Remove item"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </a>
+
+            <!-- Item Image -->
+            <div class="w-20 h-24 aspect-square rounded-none overflow-hidden border border-white bg-black flex-shrink-0 flex items-center justify-center">
+              {%- if item.image -%}
+                <img 
+                  src="{{ item.image | image_url: width: 240 }}" 
+                  alt="{{ item.title | escape }}"
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  width="100"
+                  height="100"
+                >
+              {%- else -%}
+                <div class="text-neutral-600 text-[10px] font-mono">[ NO IMG ]</div>
+              {%- endif -%}
+            </div>
+
+            <!-- Item Details -->
+            <div class="flex flex-col justify-between flex-grow">
+              <div class="space-y-1 max-w-[85%]">
+                <span class="text-[10px] font-mono text-neutral-400 uppercase">{{ item.vendor }}</span>
+                <h3 class="font-mono text-sm font-bold text-white uppercase hover:underline">
+                  <a href="{{ item.url }}">{{ item.product.title }}</a>
+                </h3>
+                {%- unless item.product.has_only_default_variant -%}
+                  <p class="text-xs font-mono text-neutral-400">
+                    {{ item.variant.title }}
+                  </p>
+                {%- endunless -%}
+              </div>
+
+              <!-- Price & Quantity Controls -->
+              <div class="flex flex-wrap items-center justify-between gap-4 mt-4 pt-4 border-t border-neutral-900">
+                <!-- Quantity selector -->
+                <div class="flex items-center border border-white bg-black rounded-none">
+                  <button 
+                    type="button" 
+                    class="px-2.5 py-1 text-white hover:text-neutral-400 focus:outline-none font-mono text-xs"
+                    onclick="var qty = document.getElementById('updates_{{ item.key }}'); if(qty.value > 0) { qty.value--; document.getElementById('CartForm').submit(); }"
+                  >
+                    -
+                  </button>
+                  <input 
+                    type="number" 
+                    name="updates[]" 
+                    id="updates_{{ item.key }}" 
+                    value="{{ item.quantity }}" 
+                    min="0" 
+                    class="w-10 bg-transparent border-0 text-center font-mono text-xs text-white focus:outline-none"
+                    onchange="document.getElementById('CartForm').submit();"
+                  >
+                  <button 
+                    type="button" 
+                    class="px-2.5 py-1 text-white hover:text-neutral-400 focus:outline-none font-mono text-xs"
+                    onclick="var qty = document.getElementById('updates_{{ item.key }}'); qty.value++; document.getElementById('CartForm').submit();"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <!-- Price display -->
+                <div class="font-mono text-right text-xs">
+                  <span class="font-bold text-white">
+                    {{ item.final_line_price | money }}
+                  </span>
+                  {%- if item.original_line_price > item.final_line_price -%}
+                    <span class="text-neutral-500 line-through block">
+                      {{ item.original_line_price | money }}
+                    </span>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <!-- Cart Summary Column (Right Side - 1 col on lg) -->
+      <div class="space-y-6">
+        <div class="p-6 bg-black border border-white rounded-none space-y-6">
+          <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-white border-b border-neutral-900 pb-4">
+            SUMMARY
+          </h3>
+
+          <!-- Subtotal / Details -->
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-neutral-400">SUBTOTAL</span>
+              <span class="font-bold text-white">{{ cart.total_price | money }}</span>
+            </div>
+            <div class="flex justify-between text-neutral-500 text-[10px]">
+              <span>SHIPPING & TAXES</span>
+              <span>CALCULATED AT CHECKOUT</span>
+            </div>
+          </div>
+
+          <!-- Special instructions / Notes -->
+          <div class="space-y-2">
+            <label for="CartNote" class="block font-mono text-[10px] uppercase tracking-wider text-neutral-400">
+              NOTES (OPTIONAL)
+            </label>
+            <textarea 
+              name="note" 
+              id="CartNote" 
+              rows="3" 
+              class="w-full bg-black border border-white rounded-none p-3 text-xs font-mono text-white focus:outline-none"
+              placeholder="Instructions..."
+            >{{ cart.note }}</textarea>
+          </div>
+
+          <!-- Checkout Actions -->
+          <div class="space-y-3">
+            <button 
+              type="submit" 
+              name="checkout" 
+              class="w-full bg-white hover:bg-neutral-200 text-black font-mono font-bold uppercase tracking-wider py-4 rounded-none transition-colors text-xs"
+            >
+              PROCEED TO CHECKOUT
+            </button>
+            <button 
+              type="submit" 
+              name="update" 
+              class="w-full bg-black border border-white hover:bg-neutral-900 text-white font-mono text-xs font-bold uppercase tracking-wider py-3 rounded-none transition-colors"
+            >
+              UPDATE
+            </button>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <a href="/collections/all" class="font-mono text-xs text-neutral-500 hover:text-white hover:underline uppercase">
+            &lt; Continue Shopping
+          </a>
+        </div>
+      </div>
+
+    </form>
+  {%- else -%}
+    <!-- Empty State -->
+    <div class="py-24 border border-dashed border-white rounded-none flex flex-col items-center justify-center text-center space-y-4">
+      <div class="text-xs font-mono text-neutral-500">// CART EMPTY</div>
+      <p class="text-xs font-mono text-neutral-400 max-w-xs">Your shopping cart is currently empty.</p>
+      <a href="/collections/all" class="bg-white text-black font-mono font-bold text-xs px-6 py-3 rounded-none transition-colors uppercase">
+        EXPLORE THE CATALOG
+      </a>
+    </div>
+  {%- endif -%}
+
+</section>
+
+{% schema %}
+{
+  "name": "Main Cart Detail",
+  "settings": []
+}
+{% endschema %}

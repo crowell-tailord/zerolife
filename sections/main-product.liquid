@@ -1,0 +1,225 @@
+<section class="py-8 px-6 max-w-7xl mx-auto">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16">
+    
+    <!-- Product Images Column -->
+    <div class="space-y-4">
+      <div class="relative aspect-square w-full overflow-hidden rounded-none border border-white bg-black flex items-center justify-center">
+        {%- if product.featured_image -%}
+          <img 
+            id="ProductFeaturedImage"
+            src="{{ product.featured_image | image_url: width: 800 }}" 
+            alt="{{ product.featured_image.alt | escape }}"
+            class="w-full h-full object-cover object-center transition-opacity"
+            loading="eager"
+            width="800"
+            height="800"
+          >
+        {%- else -%}
+          <div class="text-neutral-600 text-xs font-mono">[ NO IMAGE ]</div>
+        {%- endif -%}
+        
+        {%- if product.compare_at_price > product.price -%}
+          <span class="absolute top-4 left-4 bg-white text-black text-xs font-mono font-bold px-3 py-1 rounded-none uppercase">
+            SALE
+          </span>
+        {%- endif -%}
+      </div>
+
+      <!-- Thumbnail Images -->
+      {%- if product.images.size > 1 -%}
+        <div class="grid grid-cols-4 gap-3">
+          {%- for image in product.images -%}
+            <button 
+              type="button"
+              class="aspect-square rounded-none border border-white bg-black overflow-hidden hover:opacity-80 transition-opacity focus:outline-none"
+              onclick="document.getElementById('ProductFeaturedImage').src = '{{ image | image_url: width: 800 }}'"
+            >
+              <img 
+                src="{{ image | image_url: width: 200 }}" 
+                alt="{{ image.alt | escape }}"
+                class="w-full h-full object-cover"
+                loading="lazy"
+                width="200"
+                height="200"
+              >
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Product Details Column -->
+    <div class="flex flex-col justify-start space-y-6">
+      
+      <!-- Vendor & Title -->
+      <div class="space-y-2">
+        {%- if product.vendor -%}
+          <span class="text-xs font-mono text-neutral-400 uppercase">// {{ product.vendor }}</span>
+        {%- endif -%}
+        <h1 class="text-3xl font-mono font-bold tracking-tight text-white uppercase">
+          {{ product.title }}
+        </h1>
+      </div>
+
+      <!-- Price Block -->
+      <div class="flex items-baseline gap-4 font-mono text-xl">
+        <span class="font-bold text-white" id="ProductPrice">
+          {{ product.price | money }}
+        </span>
+        {%- if product.compare_at_price > product.price -%}
+          <span class="text-neutral-500 line-through">
+            {{ product.compare_at_price | money }}
+          </span>
+        {%- endif -%}
+      </div>
+
+      <!-- Divider -->
+      <hr class="border-neutral-800" />
+
+      <!-- Shopify Form -->
+      {%- form 'product', product, id: 'ProductForm', class: 'space-y-6' -%}
+        
+        <!-- Hidden Variant Selector for fallback -->
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+        <!-- Option Dropdowns / Swatches -->
+        {%- unless product.has_only_default_variant -%}
+          <div class="space-y-4">
+            {%- for option in product.options_with_values -%}
+              <div class="space-y-2">
+                <label class="block text-xs font-mono uppercase tracking-wider text-neutral-400">
+                  {{ option.name }}
+                </label>
+                <div class="relative">
+                  <select 
+                    class="w-full bg-black border border-white rounded-none px-4 py-3 text-xs font-mono text-white focus:outline-none appearance-none cursor-pointer"
+                    onchange="updateProductVariant(this)"
+                  >
+                    {%- for value in option.values -%}
+                      <option 
+                        value="{{ value | escape }}" 
+                        {% if option.selected_value == value %}selected="selected"{% endif %}
+                      >
+                        {{ value }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+
+        <!-- Quantity Selector & CTA Button -->
+        <div class="flex flex-col sm:flex-row gap-4">
+          <!-- Quantity -->
+          <div class="space-y-2 sm:w-28">
+            <label class="block text-xs font-mono uppercase tracking-wider text-neutral-400">
+              QTY
+            </label>
+            <div class="flex items-center border border-white bg-black rounded-none">
+              <button 
+                type="button" 
+                class="px-3 py-2 text-white hover:text-neutral-400 focus:outline-none font-mono text-base"
+                onclick="var qty = document.getElementById('Quantity'); if(qty.value > 1) qty.value--;"
+              >
+                -
+              </button>
+              <input 
+                type="number" 
+                id="Quantity" 
+                name="quantity" 
+                value="1" 
+                min="1" 
+                class="w-full bg-transparent border-0 text-center font-mono text-xs text-white focus:outline-none"
+              >
+              <button 
+                type="button" 
+                class="px-3 py-2 text-white hover:text-neutral-400 focus:outline-none font-mono text-base"
+                onclick="var qty = document.getElementById('Quantity'); qty.value++;"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Add to Cart -->
+          <div class="flex-grow flex items-end">
+            <button 
+              type="submit" 
+              name="add"
+              id="AddToCartButton"
+              class="w-full bg-white hover:bg-neutral-200 disabled:bg-neutral-800 disabled:text-neutral-500 text-black font-mono font-bold uppercase tracking-wider py-4 rounded-none transition-colors"
+              {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+            >
+              {%- if product.selected_or_first_available_variant.available -%}
+                ADD TO CART
+              {%- else -%}
+                OUT OF STOCK
+              {%- endif -%}
+            </button>
+          </div>
+        </div>
+
+      {%- endform -%}
+
+      <!-- Divider -->
+      <hr class="border-neutral-800" />
+
+      <!-- Description -->
+      <div class="space-y-4">
+        <h3 class="text-xs font-mono uppercase tracking-wider text-neutral-400">// DESCRIPTION</h3>
+        <div class="prose prose-invert max-w-none text-neutral-300 text-xs leading-relaxed font-mono space-y-4">
+          {{ product.description }}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  // Dynamic variant updater
+  const productVariants = {{ product.variants | json }};
+  
+  function updateProductVariant() {
+    const selectElements = document.querySelectorAll('#ProductForm select');
+    const selectedOptions = Array.from(selectElements).map(select => select.value);
+    
+    const matchedVariant = productVariants.find(variant => {
+      return variant.options.every((option, index) => option === selectedOptions[index]);
+    });
+    
+    const addToCartButton = document.getElementById('AddToCartButton');
+    const hiddenVariantIdInput = document.querySelector('#ProductForm input[name="id"]');
+    const priceDisplay = document.getElementById('ProductPrice');
+    
+    if (matchedVariant) {
+      hiddenVariantIdInput.value = matchedVariant.id;
+      
+      const formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: '{{ cart.currency.iso_code }}' }).format(matchedVariant.price / 100);
+      priceDisplay.textContent = formattedPrice;
+      
+      if (matchedVariant.available) {
+        addToCartButton.disabled = false;
+        addToCartButton.textContent = 'ADD TO CART';
+      } else {
+        addToCartButton.disabled = true;
+        addToCartButton.textContent = 'OUT OF STOCK';
+      }
+    } else {
+      addToCartButton.disabled = true;
+      addToCartButton.textContent = 'UNAVAILABLE';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Main Product Detail",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,146 @@
+{%- assign featured_collection = section.settings.collection -%}
+{%- assign limit = section.settings.products_to_show | default: 4 -%}
+
+<section class="py-12 px-6 max-w-7xl mx-auto space-y-10">
+  
+  <!-- Section Header -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white pb-6">
+    <div class="space-y-1">
+      <span class="text-xs font-mono text-neutral-400 uppercase">// {{ featured_collection.title | default: 'COLLECTION' }}</span>
+      <h2 class="text-2xl md:text-3xl font-mono font-bold tracking-tight text-white uppercase">
+        {{ section.settings.title | default: featured_collection.title | default: 'FEATURED ITEMS' }}
+      </h2>
+    </div>
+    {%- if featured_collection != blank -%}
+      <a 
+        href="{{ featured_collection.url }}" 
+        class="font-mono text-xs text-white hover:underline uppercase"
+      >
+        VIEW ALL &gt;
+      </a>
+    {%- endif -%}
+  </div>
+
+  <!-- Product Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {%- if featured_collection != blank and featured_collection.all_products_count > 0 -%}
+      {%- for product in featured_collection.products limit: limit -%}
+        <div class="group flex flex-col bg-black border border-white rounded-none overflow-hidden transition-colors">
+          
+          <!-- Image Container -->
+          <div class="relative aspect-square bg-black border-b border-white overflow-hidden flex items-center justify-center">
+            <a href="{{ product.url }}" class="w-full h-full block">
+              {%- if product.featured_image -%}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 500 }}" 
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="w-full h-full object-cover object-center group-hover:opacity-80 transition-opacity"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              {%- else -%}
+                <div class="w-full h-full flex items-center justify-center text-neutral-600 text-xs font-mono">
+                  [ NO IMAGE ]
+                </div>
+              {%- endif -%}
+            </a>
+
+            <!-- Sale Tag -->
+            {%- if product.compare_at_price > product.price -%}
+              <span class="absolute top-3 left-3 bg-white text-black text-[10px] font-mono font-bold px-2 py-0.5 rounded-none uppercase">
+                SALE
+              </span>
+            {%- endif -%}
+          </div>
+
+          <!-- Content -->
+          <div class="p-4 flex flex-col flex-grow justify-between gap-4">
+            <div class="space-y-1">
+              {%- if product.vendor -%}
+                <span class="text-[10px] font-mono text-neutral-400 uppercase">{{ product.vendor }}</span>
+              {%- endif -%}
+              <h3 class="font-mono text-sm font-bold text-white uppercase group-hover:underline line-clamp-2">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+            </div>
+
+            <!-- Price & Button -->
+            <div class="flex items-center justify-between gap-2 border-t border-neutral-900 pt-4 mt-auto">
+              <div class="flex flex-col font-mono text-xs">
+                <span class="font-bold text-white">{{ product.price | money }}</span>
+                {%- if product.compare_at_price > product.price -%}
+                  <span class="text-neutral-500 line-through">{{ product.compare_at_price | money }}</span>
+                {%- endif -%}
+              </div>
+              <a 
+                href="{{ product.url }}" 
+                class="bg-white text-black hover:bg-neutral-200 px-3 py-1.5 text-xs font-mono font-bold transition-colors uppercase rounded-none"
+              >
+                VIEW
+              </a>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <!-- Mock items if no collection is selected -->
+      {%- for i in (1..limit) -%}
+        <div class="group flex flex-col bg-black border border-white rounded-none overflow-hidden">
+          <div class="relative aspect-square bg-black border-b border-white flex items-center justify-center font-mono text-xs text-neutral-600">
+            <!-- Drawn geometric wireframe X placeholder -->
+            <svg class="absolute inset-0 w-full h-full text-neutral-900" preserveAspectRatio="none" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+              <line x1="0" y1="0" x2="100" y2="100" stroke-width="0.5"/>
+              <line x1="100" y1="0" x2="0" y2="100" stroke-width="0.5"/>
+            </svg>
+            <span class="relative bg-black px-2">[ ITEM_{{ i }} ]</span>
+          </div>
+          <div class="p-4 flex flex-col flex-grow justify-between gap-4">
+            <div class="space-y-1 font-mono">
+              <span class="text-[10px] text-neutral-500 uppercase">MANUFACTURER</span>
+              <h3 class="text-sm font-bold text-white uppercase">PRODUCT TITLE</h3>
+            </div>
+            <div class="flex items-center justify-between gap-2 border-t border-neutral-900 pt-4 mt-auto">
+              <span class="text-xs font-mono font-bold text-white">$99.00</span>
+              <span class="bg-white text-black px-3 py-1.5 text-xs font-mono font-bold uppercase rounded-none">VIEW</span>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Items"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Number of products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}
