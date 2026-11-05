@@ -1,0 +1,62 @@
+{% comment %}
+  ZERØLIFE RECOVERY QUEUE Modal Section:
+  Single responsive cart component adapting from phone card stack to widescreen manifest table.
+{% endcomment %}
+
+<div id="recovery-queue" class="fixed inset-0 z-50 bg-[#0C0C0C]/95 backdrop-blur-md overflow-y-auto p-4 lg:p-12 hidden phosphor-text" role="dialog" aria-modal="true" aria-label="Recovery Queue">
+  <div class="max-w-5xl mx-auto space-y-6">
+    
+    <!-- Top Bar -->
+    <div class="flex justify-between items-baseline border-b border-[#2a2c2e] pb-4">
+      <div class="space-y-1">
+        <span class="text-xs text-[#8B9094] font-mono tracking-widest">// ZERØLIFE://QUEUE</span>
+        <h2 class="font-human text-2xl lg:text-3xl font-light text-[#E4DFD3] tracking-tight">RECOVERY QUEUE</h2>
+      </div>
+      <button id="queue-close" type="button" class="font-mono text-xs text-[#BFC3C6] hover:text-[#E4DFD3] tracking-widest py-2 px-3 border border-transparent hover:border-[#2a2c2e]">
+        [ ESC // CLOSE ]
+      </button>
+    </div>
+
+    <!-- Active Terminal Console Log -->
+    <div class="p-3 bg-black/60 border border-[#2a2c2e] font-mono text-xs text-[#00ff66] flex items-center min-h-[38px]">
+      <span id="queue-console-log">&gt; CONNECTING TO THE RECOVERY BUFFER...</span>
+      <span class="inline-block w-2 h-3.5 bg-[#00ff66] ml-1.5 animate-pulse"></span>
+    </div>
+
+    <!-- Responsive Layout: Items on Left/Top, Receipt & Extraction on Right/Bottom -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Items Container (Desktop Table or Mobile Card Stack) -->
+      <div class="lg:col-span-8 space-y-4">
+        <div id="queue-items-target">
+          <!-- Injected dynamically by RecoveryQueueController -->
+        </div>
+      </div>
+
+      <!-- Receipt & Extraction Column -->
+      <div class="lg:col-span-4 border border-[#2a2c2e] p-6 space-y-6 bg-black/40 font-mono">
+        <div class="text-xs text-[#8B9094] uppercase tracking-wider border-b border-[#2a2c2e] pb-2">
+          // MANIFEST SUMMARY
+        </div>
+
+        <div id="queue-receipt-target">
+          <!-- Injected dynamically by RecoveryQueueController -->
+        </div>
+
+        <button id="queue-extract-btn" type="button" class="zl-btn w-full text-sm font-bold tracking-widest py-4">
+          [ BEGIN EXTRACTION ]
+        </button>
+
+        <p class="text-[11px] text-[#63676A] text-center tracking-wider">
+          SECURE EXTRACTION // HANDLED BY SHOPIFY
+        </p>
+      </div>
+
+    </div>
+
+    <div class="text-center pt-8 border-t border-[#2a2c2e]/50">
+      <span class="font-mono text-xs text-[#63676A] tracking-widest">END OF QUEUE // ZERØLIFE APPAREL FROM INSIDE THE MACHINE</span>
+    </div>
+
+  </div>
+</div>

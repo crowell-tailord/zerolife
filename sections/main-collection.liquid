@@ -1,128 +1,165 @@
-{%- paginate collection.products by 12 -%}
-<section class="py-8 px-6 max-w-7xl mx-auto space-y-12">
+{% comment %}
+  ZERØLIFE Unified Responsive Collection Page (PLP):
+  Features dual-mode browsing: 3D Showroom View or Dossier Matrix Grid.
+{% endcomment %}
+
+<section class="min-h-screen w-full bg-[#0C0C0C] text-[#E4DFD3] p-6 lg:p-12 space-y-8 phosphor-text">
   
   <!-- Collection Header -->
-  <div class="border-b border-white pb-8 space-y-4">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-      <div class="space-y-1">
-        <span class="text-xs font-mono text-neutral-400 uppercase">// INDEX_CATALOG: {{ collection.products_count }} PRODUCTS</span>
-        <h1 class="text-3xl md:text-4xl font-mono font-bold tracking-tight text-white uppercase">
-          {{ collection.title }}
-        </h1>
-      </div>
-      {%- if collection.description != blank -%}
-        <div class="max-w-md text-xs font-mono text-neutral-400 leading-relaxed">
-          {{ collection.description }}
-        </div>
-      {%- endif -%}
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-baseline border-b border-[#2a2c2e] pb-6 gap-4">
+    <div class="space-y-1">
+      <span class="text-xs text-[#8B9094] font-mono tracking-widest">// ZERØLIFE://COLLECTION</span>
+      <h1 class="font-human text-3xl lg:text-4xl font-light tracking-tight text-[#E4DFD3]">
+        {{ collection.title | default: 'RECOVERED SUBJECTS' }}
+      </h1>
+    </div>
+
+    <!-- View Mode Switcher -->
+    <div class="flex items-center gap-2 font-mono text-xs">
+      <span class="text-[#8B9094]">// VIEW MODE:</span>
+      <button type="button" id="view-mode-grid" class="zl-btn text-xs py-1.5 px-3 picked" onclick="switchViewMode('grid')">
+        [ DOSSIER GRID ]
+      </button>
+      <button type="button" id="view-mode-room" class="zl-btn text-xs py-1.5 px-3" onclick="switchViewMode('room')">
+        [ 3D SHOWROOM ]
+      </button>
     </div>
   </div>
 
-  <!-- Product Grid -->
-  {%- if collection.products.size > 0 -%}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {%- for product in collection.products -%}
-        <div class="group flex flex-col bg-black border border-white rounded-none overflow-hidden transition-colors">
-          
-          <!-- Image Container -->
-          <div class="relative aspect-square bg-black border-b border-white overflow-hidden flex items-center justify-center">
-            <a href="{{ product.url }}" class="w-full h-full block">
-              {%- if product.featured_image -%}
-                <img 
-                  src="{{ product.featured_image | image_url: width: 500 }}" 
-                  alt="{{ product.featured_image.alt | escape }}"
-                  class="w-full h-full object-cover object-center group-hover:opacity-80 transition-opacity"
-                  loading="lazy"
-                  width="400"
-                  height="400"
-                >
-              {%- else -%}
-                <div class="w-full h-full flex items-center justify-center text-neutral-600 text-xs font-mono">
-                  [ NO IMAGE ]
-                </div>
-              {%- endif -%}
-            </a>
-
-            <!-- Sale Tag -->
-            {%- if product.compare_at_price > product.price -%}
-              <span class="absolute top-3 left-3 bg-white text-black text-[10px] font-mono font-bold px-2 py-0.5 rounded-none uppercase">
-                SALE
-              </span>
-            {%- endif -%}
+  <!-- View Mode 1: Dossier Matrix Grid -->
+  <div id="collection-grid-view" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-mono">
+    {% for product in collection.products %}
+      <div class="border border-[#2a2c2e] hover:border-[#E4DFD3] p-6 bg-black/40 flex flex-col justify-between space-y-6 group transition-colors">
+        
+        <!-- Header Info -->
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs text-[#8B9094]">
+            <span>FILE {{ product.metafields.zerolife.file_code | default: 'ZL-001' }}</span>
+            <span class="text-[#00ff66]">[ STATE: RECOVERED ]</span>
           </div>
-
-          <!-- Content -->
-          <div class="p-4 flex flex-col flex-grow justify-between gap-4">
-            <div class="space-y-1">
-              {%- if product.vendor -%}
-                <span class="text-[10px] font-mono text-neutral-400 uppercase">{{ product.vendor }}</span>
-              {%- endif -%}
-              <h3 class="font-mono text-sm font-bold text-white uppercase group-hover:underline line-clamp-2">
-                <a href="{{ product.url }}">{{ product.title }}</a>
-              </h3>
-            </div>
-
-            <!-- Price & Button -->
-            <div class="flex items-center justify-between gap-2 border-t border-neutral-900 pt-4 mt-auto">
-              <div class="flex flex-col font-mono text-xs">
-                <span class="font-bold text-white">{{ product.price | money }}</span>
-                {%- if product.compare_at_price > product.price -%}
-                  <span class="text-neutral-500 line-through">{{ product.compare_at_price | money }}</span>
-                {%- endif -%}
-              </div>
-              <a 
-                href="{{ product.url }}" 
-                class="bg-white text-black hover:bg-neutral-200 px-3 py-1.5 text-xs font-mono font-bold transition-colors uppercase rounded-none"
-              >
-                VIEW
-              </a>
-            </div>
-          </div>
+          <h2 class="font-human text-xl text-[#E4DFD3] group-hover:underline">
+            {{ product.title }}
+          </h2>
+          <p class="font-human italic text-xs text-[#C6C1B6]">
+            {{ product.metafields.zerolife.lore_line | default: 'the human is the glitch.' }}
+          </p>
         </div>
-      {%- endfor -%}
-    </div>
 
-    <!-- Pagination -->
-    {%- if paginate.pages > 1 -%}
-      <div class="flex items-center justify-center gap-2 pt-8 border-t border-neutral-800 font-mono text-xs">
-        {%- if paginate.previous -%}
-          <a href="{{ paginate.previous.url }}" class="px-4 py-2 border border-white rounded-none hover:bg-white hover:text-black transition-colors">&lt; PREV</a>
-        {%- endif -%}
+        <!-- Featured Image -->
+        <a href="{{ product.url }}" class="block aspect-square overflow-hidden border border-[#2a2c2e] bg-[#0C0C0C]">
+          {% if product.featured_image %}
+            <img 
+              src="{{ product.featured_image | image_url: width: 600, height: 600 }}" 
+              alt="{{ product.title | escape }}"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="w-full h-full flex items-center justify-center text-[#63676A] text-xs">
+              [ ARTIFACT SCAN MISSING ]
+            </div>
+          {% endif %}
+        </a>
 
-        {%- for part in paginate.parts -%}
-          {%- if part.is_link -%}
-            <a href="{{ part.url }}" class="px-3.5 py-2 border border-white rounded-none hover:bg-white hover:text-black transition-colors">{{ part.title }}</a>
-          {%- else -%}
-            {%- if part.title == paginate.current_page -%}
-              <span class="px-3.5 py-2 border border-white text-black bg-white font-bold rounded-none">{{ part.title }}</span>
-            {%- else -%}
-              <span class="px-3.5 py-2 text-neutral-600">{{ part.title }}</span>
-            {%- endif -%}
-          {%- endif -%}
-        {%- endfor -%}
+        <!-- Footer / Action -->
+        <div class="space-y-3 pt-2 border-t border-[#2a2c2e]">
+          <div class="flex justify-between items-baseline text-sm">
+            <span class="text-[#8B9094]">VALUE:</span>
+            <span class="font-bold text-[#E4DFD3]">{{ product.price | money }}</span>
+          </div>
 
-        {%- if paginate.next -%}
-          <a href="{{ paginate.next.url }}" class="px-4 py-2 border border-white rounded-none hover:bg-white hover:text-black transition-colors font-mono">NEXT &gt;</a>
-        {%- endif -%}
+          <a href="{{ product.url }}" class="zl-btn w-full text-xs text-center py-3">
+            [ INSPECT SUBJECT ]
+          </a>
+        </div>
+
       </div>
-    {%- endif -%}
+    {% else %}
+      <!-- Fallback mock cards for offline / empty store -->
+      <div class="border border-[#2a2c2e] p-6 bg-black/40 flex flex-col justify-between space-y-6">
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs text-[#8B9094]">
+            <span>FILE ZL-TE-001</span>
+            <span class="text-[#00ff66]">[ STATE: RECOVERED ]</span>
+          </div>
+          <h2 class="font-human text-xl text-[#E4DFD3]">ZERØLIFE Tee</h2>
+          <p class="font-human italic text-xs text-[#C6C1B6]">the human is the glitch.</p>
+        </div>
+        <div class="aspect-square border border-[#2a2c2e] overflow-hidden">
+          <img src="{{ 'tee-01-back-main.jpg' | asset_url }}" class="w-full h-full object-cover" alt="">
+        </div>
+        <div class="space-y-3 pt-2 border-t border-[#2a2c2e]">
+          <div class="flex justify-between items-baseline text-sm">
+            <span class="text-[#8B9094]">VALUE:</span>
+            <span class="font-bold text-[#E4DFD3]">$ 55.00</span>
+          </div>
+          <a href="/products/tee" class="zl-btn w-full text-xs text-center py-3">[ INSPECT SUBJECT ]</a>
+        </div>
+      </div>
 
-  {%- else -%}
-    <!-- Empty State -->
-    <div class="py-24 border border-dashed border-white rounded-none flex flex-col items-center justify-center text-center space-y-4">
-      <div class="text-xs font-mono text-neutral-500">// CATALOG EMPTY</div>
-      <p class="text-xs font-mono text-neutral-400 max-w-xs">This collection currently contains no products.</p>
-      <a href="/collections/all" class="bg-white text-black font-mono font-bold text-xs px-6 py-3 rounded-none transition-colors uppercase">
-        RESET
-      </a>
+      <div class="border border-[#2a2c2e] p-6 bg-black/40 flex flex-col justify-between space-y-6">
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs text-[#8B9094]">
+            <span>FILE ZL-HD-001</span>
+            <span class="text-[#00ff66]">[ STATE: RECOVERED ]</span>
+          </div>
+          <h2 class="font-human text-xl text-[#E4DFD3]">ZERØLIFE Hoodie</h2>
+          <p class="font-human italic text-xs text-[#C6C1B6]">the human is the glitch.</p>
+        </div>
+        <div class="aspect-square border border-[#2a2c2e] overflow-hidden">
+          <img src="{{ 'hoodie-01-main.jpg' | asset_url }}" class="w-full h-full object-cover" alt="">
+        </div>
+        <div class="space-y-3 pt-2 border-t border-[#2a2c2e]">
+          <div class="flex justify-between items-baseline text-sm">
+            <span class="text-[#8B9094]">VALUE:</span>
+            <span class="font-bold text-[#E4DFD3]">$ 95.00</span>
+          </div>
+          <a href="/products/hoodie" class="zl-btn w-full text-xs text-center py-3">[ INSPECT SUBJECT ]</a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- View Mode 2: Embedded 3D Showroom (Hidden by default, toggled via switcher) -->
+  <div id="collection-room-view" class="max-w-7xl mx-auto h-[75vh] border border-[#2a2c2e] relative hidden overflow-hidden">
+    <canvas id="collection-room-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+    <div class="absolute bottom-6 left-6 z-10 flex gap-2 font-mono text-xs">
+      <button type="button" class="zl-btn text-xs py-2 px-3 picked" onclick="switchCollectionModel('tee')">[ 01 // TEE ]</button>
+      <button type="button" class="zl-btn text-xs py-2 px-3" onclick="switchCollectionModel('catwalk')">[ 02 // CATWALK ]</button>
+      <button type="button" class="zl-btn text-xs py-2 px-3" onclick="switchCollectionModel('hoodie')">[ 03 // HOODIE ]</button>
     </div>
-  {%- endif -%}
-</section>
-{%- endpaginate -%}
+  </div>
 
-{% schema %}
-{
-  "name": "Main Collection List",
-  "settings": []
+</section>
+
+<script>
+function switchViewMode(mode) {
+  const grid = document.getElementById('collection-grid-view');
+  const room = document.getElementById('collection-room-view');
+  const gridBtn = document.getElementById('view-mode-grid');
+  const roomBtn = document.getElementById('view-mode-room');
+
+  if (mode === 'grid') {
+    grid.classList.remove('hidden');
+    room.classList.add('hidden');
+    gridBtn.classList.add('picked');
+    roomBtn.classList.remove('picked');
+  } else {
+    grid.classList.add('hidden');
+    room.classList.remove('hidden');
+    gridBtn.classList.remove('picked');
+    roomBtn.classList.add('picked');
+
+    if (!window.collectionRoom && window.ResponsiveRoom3D) {
+      const canvas = document.getElementById('collection-room-canvas');
+      window.collectionRoom = new window.ResponsiveRoom3D(room, canvas, { activeModel: 'tee' });
+    }
+  }
 }
-{% endschema %}
+
+function switchCollectionModel(model) {
+  if (window.collectionRoom) {
+    window.collectionRoom.loadModel(model);
+  }
+}
+</script>

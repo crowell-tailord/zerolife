@@ -1,0 +1,96 @@
+/* The desktop's page-text over the room (Nov 1 2026, user: "start making [the main menu] match" the phone's): the MENU
+   terminal (js/room-menu.js) and the queue's status bar (js/room-queue.js; the queue page itself is drawn, in the room).
+   Copied from mobile.html's rules so the two read the same; desktop sizes a step up. Machine text is Orator here
+   (css/tokens.css), Share Tech Mono on the phone. */
+:root { --line: #2a2c2e; }
+
+/* page text over the effects, softened so it sits IN the picture (mobile.html's note): a slight blur, added on as
+   light, a bone glow drawn as filters on the letters */
+#models .term { filter: blur(0.45px); mix-blend-mode: screen; }
+.term-head, .term-line, .dir-row .n, .dir-row .name, .dir-row .size, .dir-row .what, #queue-bar span {
+    filter: drop-shadow(0 0 4px rgba(228, 223, 211, 0.35)) drop-shadow(0 0 12px rgba(228, 223, 211, 0.15));
+}
+.cap { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--machine-talk); }
+.cap.dim { color: var(--ash); }
+
+/* ---- MENU: a terminal typing itself out, then the directories ---- */
+#models {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(36em, calc(100vw - 48px));
+    z-index: 2;
+    font-family: var(--font-machine);
+    color: var(--bone);
+}
+#models[hidden], #models [hidden] { display: none; }
+.term { width: 100%; }
+.term-head { margin-bottom: 14px; }
+.term-line { font-size: 14px; letter-spacing: 0.08em; color: var(--machine-talk); min-height: 1.5em; }
+.term-line.cursor::after { content: "\2588"; margin-left: 2px; animation: zl-blink 1s steps(1) infinite; }
+@keyframes zl-blink { 50% { opacity: 0; } }
+.dir { list-style: none; display: grid; gap: 10px; margin-top: 26px; }
+.dir-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.4em minmax(0, 1fr) auto;
+    gap: 4px 10px;
+    align-items: baseline;
+    text-align: left;
+    padding: 16px;
+    font: inherit;
+    color: var(--bone);
+    background: none;
+    border: 1px solid var(--machine-annotations);
+    cursor: pointer;
+}
+.dir-row .n, .dir-row .size { font-size: 12px; letter-spacing: 0.12em; color: var(--ash); }
+.dir-row .name { font-size: 18px; letter-spacing: 0.12em; }
+.dir-row .what { grid-column: 2 / 4; font-family: var(--font-human); font-style: italic; font-size: 16px; color: var(--dark-bone); }
+.dir-row.locked { color: var(--ash); border-style: dashed; cursor: default; }
+.dir-row.locked .what { color: var(--ash); }
+.dir-row:hover:not(.locked) { border-color: var(--bone); background: rgba(228, 223, 211, 0.07); box-shadow: inset 2px 0 var(--bone); }
+.dir-row.picked { border-color: var(--bone); background: rgba(228, 223, 211, 0.06); outline: 1px solid var(--bone); outline-offset: 3px; }
+.dir-row:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+.glitch-in { animation: zl-glitch-in 0.36s steps(5) both; }
+@keyframes zl-glitch-in {
+    0% { opacity: 0; transform: translateX(-10px); text-shadow: -3px 0 rgba(255, 40, 80, 0.9), 3px 0 rgba(0, 230, 255, 0.9); }
+    40% { opacity: 1; transform: translateX(6px); clip-path: inset(10% 0 35% 0); }
+    70% { transform: translateX(-3px); clip-path: inset(40% 0 0 0); text-shadow: -2px 0 rgba(255, 40, 80, 0.8), 2px 0 rgba(0, 230, 255, 0.8); }
+    100% { transform: none; clip-path: none; text-shadow: none; }
+}
+.denied { animation: zl-jolt 0.08s steps(2) 5; text-shadow: -2px 0 rgba(255, 40, 80, 0.85), 2px 0 rgba(0, 230, 255, 0.85); }
+@keyframes zl-jolt {
+    0% { transform: translateX(-3px); }
+    50% { transform: translateX(4px); }
+    100% { transform: translateX(-1px); }
+}
+
+/* the status line while anything is queued: bottom right, solid (opens the queue) */
+#queue-bar {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 800;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 340px;
+    min-height: 52px;
+    padding: 0 18px;
+    font-family: var(--font-machine);
+    color: var(--bone);
+    text-align: left;
+    background: var(--void);
+    border: 1px solid var(--machine-annotations);
+    cursor: pointer;
+}
+#queue-bar .dot { width: calc(var(--px) * 2); height: calc(var(--px) * 2); background: var(--bone); animation: zl-blink 1s steps(1) infinite; }
+#queue-bar[hidden] { display: none; }
+#queue-bar .go { margin-left: auto; }
+#queue-bar:hover { border-color: var(--bone); background: #141414; }
+
+@media (prefers-reduced-motion: reduce) {
+    #queue-bar .dot, .glitch-in, .denied, .term-line.cursor::after { animation: none; }
+}

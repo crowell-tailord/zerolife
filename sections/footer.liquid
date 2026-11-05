@@ -1,46 +1,25 @@
-<footer class="w-full bg-black border-t border-white px-6 py-12 text-white text-xs mt-auto">
-  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-    <!-- Brand / Mission -->
-    <div class="space-y-3">
-      <span class="text-base font-mono font-bold tracking-widest text-white">ZEROLIFE</span>
-      <p class="text-neutral-400 max-w-xs font-mono">
-        Base wireframe slate. Ultra-minimal dark theme.
-      </p>
+{% comment %}
+  ZERØLIFE Industrial System Footer
+{% endcomment %}
+<footer class="w-full bg-[#0C0C0C] border-t border-[#2a2c2e] px-4 lg:px-8 py-8 phosphor-text font-mono text-xs text-[#8B9094]">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    
+    <div class="space-y-1">
+      <div class="text-[#E4DFD3] font-bold">ZERØLIFE APPAREL CORP</div>
+      <p class="text-[11px] text-[#63676A]">RECOVERED FROM INSIDE THE MACHINE // ALL RIGHTS RESERVED</p>
     </div>
 
-    <!-- Quick Links -->
-    <div class="space-y-3">
-      <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-white">Links</h4>
-      <ul class="space-y-2 font-mono text-neutral-400">
-        <li><a href="/policies/privacy-policy" class="hover:text-white hover:underline">Privacy Policy</a></li>
-        <li><a href="/policies/terms-of-service" class="hover:text-white hover:underline">Terms of Service</a></li>
-        <li><a href="/pages/contact" class="hover:text-white hover:underline">Contact</a></li>
-      </ul>
+    <div class="flex flex-wrap gap-4 text-[11px]">
+      <button type="button" onclick="window.dispatchEvent(new CustomEvent('zerolife:open-root'))" class="hover:text-[#E4DFD3]">[ SYSTEM ROOT ]</button>
+      <a href="/pages/size-guide" class="hover:text-[#E4DFD3]">[ SIZE PROTOCOL ]</a>
+      <a href="/policies/shipping-policy" class="hover:text-[#E4DFD3]">[ SHIPPING ]</a>
+      <a href="/policies/refund-policy" class="hover:text-[#E4DFD3]">[ RETURNS ]</a>
+      <a href="/policies/terms-of-service" class="hover:text-[#E4DFD3]">[ TERMS ]</a>
     </div>
 
-    <!-- Newsletter / Subscribe -->
-    <div class="space-y-3">
-      <h4 class="font-mono text-xs font-bold uppercase tracking-wider text-white">Newsletter</h4>
-      <p class="text-neutral-400 max-w-xs font-mono">
-        Subscribe to updates.
-      </p>
-      <div class="flex">
-        <input type="email" placeholder="EMAIL ADDRESS" class="flex-grow bg-black border border-white px-4 py-2 text-xs font-mono focus:outline-none text-white rounded-none" />
-        <button class="bg-white hover:bg-neutral-200 text-black px-4 font-mono text-xs font-bold transition-colors rounded-none border border-l-0 border-white">JOIN</button>
-      </div>
+    <div class="text-[11px] text-[#63676A]">
+      NODE: 0x7F // STATUS: NOMINAL
     </div>
-  </div>
 
-  <!-- Copyright -->
-  <div class="max-w-7xl mx-auto border-t border-neutral-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-neutral-500 font-mono uppercase">
-    <p>&copy; {{ 'now' | date: "%Y" }} ZEROLIFE. All rights reserved.</p>
-    <p>Powered by Vite + Tailwind v4 + Shopify</p>
   </div>
 </footer>
-
-{% schema %}
-{
-  "name": "Footer",
-  "settings": []
-}
-{% endschema %}

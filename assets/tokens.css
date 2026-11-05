@@ -1,0 +1,54 @@
+/* Design tokens. Source of truth: brand/ZL_design_language_V_1.1.pdf (palette page).
+   Hex values below were read from the booklet's text. Bone is E4DFD3: the palette page
+   prints C6C1B6 twice, so Bone was taken from the swatch notes. Check against the PDF. */
+
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('../assets/fonts/AveriaSerifLibre-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('../assets/fonts/AveriaSerifLibre-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('../assets/fonts/AveriaSerifLibre-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('../assets/fonts/AveriaSerifLibre-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+:root {
+    /* Palette */
+    --void: #0C0C0C;
+    --bone: #E4DFD3;
+    --dark-bone: #C6C1B6;
+    --ash: #8B9094;
+    --machine-talk: #BFC3C6;
+    --machine-annotations: #63676A;
+
+    /* Two registers: the machine tears and interferes, the human is the glitch. */
+    /* Orator Std as activated on the user's own computer through Adobe Fonts / Creative Cloud (Oct 12 2026): used from
+       the computer, never copied into the site (Adobe's terms forbid self-hosting). Not live yet: for the live site it
+       must come through an Adobe Fonts web project link instead. Elsewhere the next font in the list shows. */
+    /* 'orator-std' = the family name an Adobe Fonts web project gives it (waiting for the user's link, Oct 12 2026). */
+    --font-machine: 'orator-std', 'Orator Std', 'Share Tech Mono', 'Courier New', monospace;
+    --font-human: 'Averia Serif Libre', Georgia, serif;
+
+    /* Look-layer strength. Turn these, not the CSS, to taste. */
+    --crt-noise-opacity: 0.22;
+    --crt-scanline-opacity: 0.4;
+    --crt-vignette-opacity: 0.95;
+}

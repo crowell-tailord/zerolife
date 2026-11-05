@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite build --watch --emptyOutDir false",
     "build": "vite build",
-    "shopify:dev": "shopify theme dev --store=tailord-design.myshopify.com",
+    "shopify:dev": "shopify theme dev --store=zl-dev-si3z91gv.myshopify.com",
     "deploy": "npm run build && shopify theme push"
   },
   "dependencies": {

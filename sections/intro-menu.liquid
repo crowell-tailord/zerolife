@@ -1,0 +1,37 @@
+<section>
+  <h1 class='sr-only'>ZERØLIFE</h1>
+  <canvas id='gl-canvas' role='img' aria-label='Ø'></canvas>
+  <div id='logo-box' aria-hidden='true'></div>
+</section>
+
+<!--
+  Once the Ø has broken apart, the landing's canvas is switched off and
+  thrown away, a fresh one takes its place, and the room starts on it. No page load in between.
+  Listening from HERE, before the big mannequin files (Nov 4 2026): on a slow connection the Ø could be clicked
+  before they had all arrived, and nothing was listening yet (the landing stayed, broken apart, for good). Now the
+  room waits for the page to finish loading, then starts.
+-->
+<script>
+  window.addEventListener('zerolife:enter', function () {
+    function go() {
+      const old = document.getElementById('gl-canvas')
+      const gl = old.getContext('webgl2') || old.getContext('webgl')
+      const lose = gl && gl.getExtension('WEBGL_lose_context')
+      if (lose) lose.loseContext() // frees the landing's graphics memory
+      const fresh = document.createElement('canvas')
+      fresh.id = 'gl-canvas'
+      fresh.setAttribute('role', 'img')
+      fresh.setAttribute('aria-label', 'ZERØLIFE')
+      old.replaceWith(fresh) // (#logo-box stays: the landing's cursor code still looks for it)
+      window.ZL_ROOM.start()
+    }
+    go()
+  })
+</script>
+
+{% schema %}
+{
+  "name": "Intro Menu",
+  "settings": []
+}
+{% endschema %}

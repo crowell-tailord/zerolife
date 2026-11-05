@@ -1,0 +1,142 @@
+{% comment %}
+  ZERØLIFE Product Dossier Panel Snippet:
+  Single responsive product information panel (flows beneath 3D window on mobile, docks beside model on desktop).
+{% endcomment %}
+
+<div class="space-y-6 text-[#E4DFD3] font-mono" id="dossier-panel-root">
+  <!-- Subject Header & Lore -->
+  <div class="space-y-2 border-b border-[#2a2c2e] pb-4">
+    <div class="text-xs text-[#8B9094] tracking-widest uppercase">
+      <span id="dossier-subject-tag">SUBJECT 01 // RECOVERED</span>
+    </div>
+    <h1 id="dossier-name" class="font-human text-3xl lg:text-4xl font-light text-[#E4DFD3] tracking-tight">
+      {{ product.title | default: 'ZERØLIFE Tee' }}
+    </h1>
+    <p id="dossier-line" class="font-human italic text-sm text-[#C6C1B6]">
+      the human is the glitch.
+    </p>
+  </div>
+
+  <!-- Price & Availability -->
+  <div class="flex items-baseline justify-between">
+    <div id="dossier-price" class="text-2xl font-bold tracking-wider text-[#E4DFD3]">
+      {{ product.price | money | default: '$ 55.00' }}
+    </div>
+    <div class="text-xs text-[#00ff66] tracking-widest flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-[#00ff66] animate-pulse"></span>
+      <span>[ STATE: AVAILABLE ]</span>
+    </div>
+  </div>
+
+  <!-- Studio Photo Carousel (Horizontal strip) -->
+  <div class="space-y-2">
+    <div class="text-xs text-[#8B9094] uppercase tracking-wider">// ARTIFACT ARCHIVE</div>
+    <div class="photos flex gap-3 overflow-x-auto scrollbar-none py-2" id="dossier-photos">
+      <!-- Injected dynamically by JS, with default flat asset fallbacks -->
+      <img src="{{ 'tee-01-back-main.jpg' | asset_url }}" class="w-24 h-28 object-cover border border-[#2a2c2e] hover:border-[#E4DFD3] cursor-pointer" alt="">
+      <img src="{{ 'tee-02-back-faces.jpg' | asset_url }}" class="w-24 h-28 object-cover border border-[#2a2c2e] hover:border-[#E4DFD3] cursor-pointer" alt="">
+      <img src="{{ 'tee-03-text-sq.jpg' | asset_url }}" class="w-24 h-28 object-cover border border-[#2a2c2e] hover:border-[#E4DFD3] cursor-pointer" alt="">
+    </div>
+  </div>
+
+  <!-- Size Selection & Quantity -->
+  <div class="space-y-3">
+    <div class="flex justify-between text-xs text-[#8B9094] uppercase tracking-wider">
+      <span>PICK SIZE</span>
+      <button type="button" class="underline hover:text-[#E4DFD3]" onclick="document.getElementById('size-guide-modal')?.classList.remove('hidden')">SIZE PROTOCOL</button>
+    </div>
+    <div class="grid grid-cols-4 gap-2" id="dossier-size-selector">
+      <button type="button" class="zl-btn text-xs py-3 size-btn picked" data-size="S">[ S ]</button>
+      <button type="button" class="zl-btn text-xs py-3 size-btn" data-size="M">[ M ]</button>
+      <button type="button" class="zl-btn text-xs py-3 size-btn" data-size="L">[ L ]</button>
+      <button type="button" class="zl-btn text-xs py-3 size-btn" data-size="XL">[ XL ]</button>
+    </div>
+  </div>
+
+  <!-- Action Buttons: Add to Cart + Accelerated Checkout -->
+  <div class="space-y-3 pt-2">
+    <button type="button" id="dossier-add-btn" class="zl-btn w-full text-sm font-bold tracking-widest py-4">
+      [ ADD TO RECOVERY QUEUE ]
+    </button>
+    
+    <div id="dossier-accelerated-wrapper" class="w-full">
+      {%- form 'product', product -%}
+        <input type="hidden" name="id" id="dossier-variant-id-input" value="{{ product.selected_or_first_available_variant.id }}">
+        {{ form | payment_button }}
+      {%- endform -%}
+    </div>
+  </div>
+
+  <!-- Specifications Accordion -->
+  <div class="border-t border-[#2a2c2e] divide-y divide-[#2a2c2e] text-xs pt-2">
+    <details class="py-3 group" open>
+      <summary class="flex justify-between items-center cursor-pointer list-none text-[#BFC3C6] tracking-wider uppercase">
+        <span>FABRIC & CONSTRUCTION</span>
+        <span class="group-open:rotate-45 transition-transform text-[#8B9094] text-base">+</span>
+      </summary>
+      <div class="pt-3 space-y-1 text-[#8B9094]">
+        <p>• 240 GSM heavyweight combed cotton jersey</p>
+        <p>• Boxy cut, dropped shoulder, relaxed drape</p>
+        <p>• Multi-pass discharge screen print front & back</p>
+      </div>
+    </details>
+
+    <details class="py-3 group">
+      <summary class="flex justify-between items-center cursor-pointer list-none text-[#BFC3C6] tracking-wider uppercase">
+        <span>CARE PROTOCOL</span>
+        <span class="group-open:rotate-45 transition-transform text-[#8B9094] text-base">+</span>
+      </summary>
+      <div class="pt-3 space-y-1 text-[#8B9094]">
+        <p>• Machine wash cold, inside out</p>
+        <p>• Hang dry only. Do not tumble dry</p>
+        <p>• Treat like an artifact you want to keep</p>
+      </div>
+    </details>
+
+    <details class="py-3 group">
+      <summary class="flex justify-between items-center cursor-pointer list-none text-[#BFC3C6] tracking-wider uppercase">
+        <span>GLOBAL BEAM & LOGISTICS</span>
+        <span class="group-open:rotate-45 transition-transform text-[#8B9094] text-base">+</span>
+      </summary>
+      <div class="pt-3 space-y-1 text-[#8B9094]">
+        <p>• Worldwide shipping via tracked courier</p>
+        <p>• 3-5 business days processing from dispatch</p>
+        <p>• Free shipping automatically applies on orders over $150</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.getElementById('dossier-panel-root');
+  if (!root) return;
+
+  let selectedSize = 'S';
+  let activeModelKey = '{{ product.handle | default: "tee" }}';
+
+  // Size buttons
+  const sizeBtns = root.querySelectorAll('.size-btn');
+  sizeBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      sizeBtns.forEach(b => b.classList.remove('picked'));
+      btn.classList.add('picked');
+      selectedSize = btn.getAttribute('data-size');
+    });
+  });
+
+  // Add to cart button
+  const addBtn = document.getElementById('dossier-add-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('zerolife:cart-add', {
+        detail: {
+          modelKey: activeModelKey,
+          size: selectedSize,
+          qty: 1
+        }
+      }));
+    });
+  }
+});
+</script>

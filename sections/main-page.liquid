@@ -1,17 +1,41 @@
-<section class="py-8 md:py-16 px-4 max-w-3xl mx-auto space-y-8">
-  <!-- Page Header -->
-  <div class="border-b border-slate-900 pb-6">
-    <span class="text-xs font-mono tracking-widest text-emerald-400 uppercase">// RECORD_PAGE</span>
-    <h1 class="text-3xl md:text-5xl font-mono font-black tracking-tight text-slate-100 uppercase">
-      {{ page.title }}
-    </h1>
-  </div>
-
-  <!-- Page Content -->
-  <div class="prose prose-invert max-w-none text-slate-300 text-sm md:text-base leading-relaxed font-sans space-y-6">
-    {{ page.content }}
-  </div>
+<section>
+  <h1 class='sr-only'>ZERØLIFE</h1>
+  <canvas id='gl-canvas' role='img' aria-label='Ø'></canvas>
+  <div id='logo-box' aria-hidden='true'></div>
+  <!--
+    The menu after the enter video: a terminal, as on the phone (js/room-menu.js fills it); Escape goes back to it.
+  -->
+  <div id='models' hidden></div>
 </section>
+<!--
+  Once the Ø has broken apart, the landing's canvas is switched off and
+  thrown away, a fresh one takes its place, and the room starts on it. No page load in between.
+  Listening from HERE, before the big mannequin files (Nov 4 2026): on a slow connection the Ø could be clicked
+  before they had all arrived, and nothing was listening yet (the landing stayed, broken apart, for good). Now the
+  room waits for the page to finish loading, then starts.
+-->
+<script>
+  window.addEventListener('zerolife:enter', function () {
+    function go() {
+      const old = document.getElementById('gl-canvas')
+      const gl = old.getContext('webgl2') || old.getContext('webgl')
+      const lose = gl && gl.getExtension('WEBGL_lose_context')
+      if (lose) lose.loseContext() // frees the landing's graphics memory
+      const fresh = document.createElement('canvas')
+      fresh.id = 'gl-canvas'
+      fresh.setAttribute('role', 'img')
+      fresh.setAttribute('aria-label', 'ZERØLIFE')
+      old.replaceWith(fresh) // (#logo-box stays: the landing's cursor code still looks for it)
+      window.ZL_ROOM.start()
+    }
+    // straight away (Oct 10 2026): the enter video takes over at once, no waiting for the echoes
+    if (document.readyState === 'complete') go()
+    else
+      window.addEventListener('load', function () {
+        setTimeout(go, 0)
+      })
+  })
+</script>
 
 {% schema %}
 {

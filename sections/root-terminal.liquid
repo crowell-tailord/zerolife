@@ -1,0 +1,116 @@
+{% comment %}
+  ZERØLIFE ROOT Terminal Directory Section:
+  Single responsive terminal filesystem browsing pages, lore, size guide, and policies.
+{% endcomment %}
+
+<div id="root-terminal-modal" class="fixed inset-0 z-50 bg-[#0C0C0C]/95 backdrop-blur-md overflow-y-auto p-4 lg:p-12 hidden phosphor-text" role="dialog" aria-modal="true" aria-label="System Root Terminal">
+  <div class="max-w-4xl mx-auto space-y-6">
+    
+    <!-- Top Bar -->
+    <div class="flex justify-between items-baseline border-b border-[#2a2c2e] pb-4">
+      <div class="space-y-1">
+        <span class="text-xs text-[#8B9094] font-mono tracking-widest">// ZERØLIFE://ROOT</span>
+        <h2 class="font-human text-2xl lg:text-3xl font-light text-[#E4DFD3] tracking-tight">SYSTEM DIRECTORY</h2>
+      </div>
+      <button id="root-terminal-close" type="button" class="font-mono text-xs text-[#BFC3C6] hover:text-[#E4DFD3] tracking-widest py-2 px-3 border border-transparent hover:border-[#2a2c2e]">
+        [ ESC // CLOSE ]
+      </button>
+    </div>
+
+    <!-- Active Terminal Status -->
+    <div class="p-3 bg-black/60 border border-[#2a2c2e] font-mono text-xs text-[#BFC3C6] flex justify-between items-center">
+      <span>STATUS: 15 FILES // 2 CORRUPTED // LAST WRITE: RECOVERED</span>
+      <span class="text-[#8B9094]">NODE: 0x7F</span>
+    </div>
+
+    <!-- Directory Listing -->
+    <div class="space-y-6 font-mono text-xs" id="terminal-dir-view">
+      
+      <!-- FOLDER: SUBJECTS -->
+      <div class="space-y-2">
+        <div class="text-[#8B9094] uppercase tracking-wider flex items-center gap-2">
+          <span>&gt; FOLDER // SUBJECTS/</span>
+          <span class="text-[10px] text-[#63676A]">[ THE GARMENTS ]</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <a href="/collections/all" class="p-3 border border-[#2a2c2e] hover:border-[#E4DFD3] flex justify-between items-center bg-black/30 group">
+            <span class="text-[#E4DFD3] group-hover:underline">01 // COLLECTION.EXE</span>
+            <span class="text-[#8B9094]">[ RUN SHOP ]</span>
+          </a>
+          <div class="p-3 border border-[#2a2c2e]/40 flex justify-between items-center bg-black/10 text-[#63676A]">
+            <span>02 // ARCHIVE/</span>
+            <span>[ NOT YET LOST ]</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOLDER: MEMORY -->
+      <div class="space-y-2">
+        <div class="text-[#8B9094] uppercase tracking-wider flex items-center gap-2">
+          <span>&gt; FOLDER // MEMORY/</span>
+          <span class="text-[10px] text-[#63676A]">[ WHO WE ARE ]</span>
+        </div>
+        <div class="p-4 border border-[#2a2c2e] bg-black/30 space-y-3">
+          <div class="flex justify-between items-center border-b border-[#2a2c2e] pb-2 text-[#E4DFD3]">
+            <span>FILE 03 // LOG_000.TXT // AUTHOR: UNKNOWN</span>
+            <span class="text-[#8B9094]">0.6 KB</span>
+          </div>
+          <div class="font-human italic text-sm text-[#C6C1B6] space-y-2 leading-relaxed">
+            <p>Somewhere between the bytes there is a room. Nothing in it moves unless someone looks at it.</p>
+            <p>The ones left inside stand very still, greyed out, waiting to be picked. When you choose one, it remembers it had a body.</p>
+            <p>ZERØLIFE makes the clothes they were wearing when the machine stopped.</p>
+            <p>We don’t sell outfits. We recover them.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOLDER: PROTOCOLS -->
+      <div class="space-y-2">
+        <div class="text-[#8B9094] uppercase tracking-wider flex items-center gap-2">
+          <span>&gt; FOLDER // PROTOCOLS/</span>
+          <span class="text-[10px] text-[#63676A]">[ HOW IT WORKS ]</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div class="p-3 border border-[#2a2c2e] bg-black/30 space-y-2">
+            <div class="text-[#E4DFD3] font-bold">SIZE_GUIDE.DAT</div>
+            <p class="text-[#8B9094] text-[11px]">All garments cut boxy and oversized with dropped shoulders. Order usual size for intended drape.</p>
+          </div>
+          <div class="p-3 border border-[#2a2c2e] bg-black/30 space-y-2">
+            <div class="text-[#E4DFD3] font-bold">SHIPPING.TXT</div>
+            <p class="text-[#8B9094] text-[11px]">Tracked worldwide beam. 3-5 business days processing. Free shipping over $150.</p>
+          </div>
+          <div class="p-3 border border-[#2a2c2e] bg-black/30 space-y-2">
+            <div class="text-[#E4DFD3] font-bold">RETURNS.TXT</div>
+            <p class="text-[#8B9094] text-[11px]">14 days from delivery. Unworn, unwashed with all tags attached.</p>
+          </div>
+          <div class="p-3 border border-[#2a2c2e] bg-black/30 space-y-2">
+            <div class="text-[#E4DFD3] font-bold">CARE.TXT</div>
+            <p class="text-[#8B9094] text-[11px]">Cold wash inside out. Hang dry only. Never iron directly on the print.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const modal = document.getElementById('root-terminal-modal');
+  const closeBtn = document.getElementById('root-terminal-close');
+  if (!modal) return;
+
+  if (closeBtn) closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      modal.classList.add('hidden');
+    }
+  });
+
+  // Global trigger for root terminal
+  window.addEventListener('zerolife:open-root', () => {
+    modal.classList.remove('hidden');
+  });
+});
+</script>

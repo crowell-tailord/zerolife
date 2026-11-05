@@ -1,0 +1,162 @@
+{% comment %}
+  ZERØLIFE Product Data Bridge: Serializes live Shopify products into window.ZL_PRODUCTS
+  with self-healing fallback mock datasets for offline development.
+{% endcomment %}
+<script id="zl-product-bridge">
+(function() {
+  window.ZL_PRODUCTS = window.ZL_PRODUCTS || {};
+
+  // Default fallback mock products
+  const mockCatalog = {
+    tee: {
+      id: 'tee',
+      model_key: 'tee',
+      subject: 'SUBJECT 01 // RECOVERED',
+      name: 'ZERØLIFE Tee',
+      file: 'FILE ZL-TE-001 // STATE: DOWNLOADED',
+      line: 'the human is the glitch.',
+      price: '$ 55.00',
+      price_numeric: 55.00,
+      sizes: ['S', 'M', 'L', 'XL'],
+      variants: {
+        'S': { id: 'tee-s', available: true, price: '$ 55.00' },
+        'M': { id: 'tee-m', available: true, price: '$ 55.00' },
+        'L': { id: 'tee-l', available: true, price: '$ 55.00' },
+        'XL': { id: 'tee-xl', available: true, price: '$ 55.00' }
+      },
+      photo: '{{ "tee-01-back-main.jpg" | asset_url }}',
+      photos: [
+        '{{ "tee-01-back-main.jpg" | asset_url }}',
+        '{{ "tee-02-back-faces.jpg" | asset_url }}',
+        '{{ "tee-03-text-sq.jpg" | asset_url }}',
+        '{{ "tee-04-back-feet.jpg" | asset_url }}',
+        '{{ "tee-05-front-logo.jpg" | asset_url }}'
+      ],
+      rows: [
+        ['FABRIC', '240 GSM heavyweight jersey'],
+        ['MADE OF', '100% cotton'],
+        ['FIT', 'boxy, dropped shoulder'],
+        ['PRINT', 'screen print, front + back'],
+        ['CARE', 'cold wash inside out, do not tumble dry'],
+        ['SHIPS', '3-5 days // worldwide'],
+        ['LENGTH', '~75 cm *'],
+        ['WIDTH', '~42 cm *'],
+        ['SLEEVE', '~35 cm *']
+      ]
+    },
+    catwalk: {
+      id: 'catwalk',
+      model_key: 'catwalk',
+      subject: 'SUBJECT 02 // RECOVERED',
+      name: 'ZERØLIFE Tee (Catwalk)',
+      file: 'FILE ZL-TE-001 // STATE: WORN',
+      line: 'the human is the glitch.',
+      price: '$ 55.00',
+      price_numeric: 55.00,
+      sizes: ['S', 'M', 'L', 'XL'],
+      variants: {
+        'S': { id: 'catwalk-s', available: true, price: '$ 55.00' },
+        'M': { id: 'catwalk-m', available: true, price: '$ 55.00' },
+        'L': { id: 'catwalk-l', available: true, price: '$ 55.00' },
+        'XL': { id: 'catwalk-xl', available: true, price: '$ 55.00' }
+      },
+      photo: '{{ "tee-01-back-main.jpg" | asset_url }}',
+      photos: [
+        '{{ "tee-01-back-main.jpg" | asset_url }}',
+        '{{ "tee-02-back-faces.jpg" | asset_url }}'
+      ],
+      rows: [
+        ['FABRIC', '240 GSM heavyweight jersey'],
+        ['MADE OF', '100% cotton'],
+        ['FIT', 'boxy, dropped shoulder'],
+        ['PRINT', 'screen print, front + back'],
+        ['CARE', 'cold wash inside out, do not tumble dry'],
+        ['SHIPS', '3-5 days // worldwide'],
+        ['LENGTH', '~75 cm *'],
+        ['WIDTH', '~42 cm *'],
+        ['SLEEVE', '~35 cm *']
+      ]
+    },
+    hoodie: {
+      id: 'hoodie',
+      model_key: 'hoodie',
+      subject: 'SUBJECT 03 // RECOVERED',
+      name: 'ZERØLIFE Hoodie',
+      file: 'FILE ZL-HD-001 // STATE: INFECTED',
+      line: 'the human is the glitch.',
+      price: '$ 95.00',
+      price_numeric: 95.00,
+      sizes: ['S', 'M', 'L', 'XL'],
+      variants: {
+        'S': { id: 'hoodie-s', available: true, price: '$ 95.00' },
+        'M': { id: 'hoodie-m', available: true, price: '$ 95.00' },
+        'L': { id: 'hoodie-l', available: true, price: '$ 95.00' },
+        'XL': { id: 'hoodie-xl', available: true, price: '$ 95.00' }
+      },
+      photo: '{{ "hoodie-01-main.jpg" | asset_url }}',
+      photos: [
+        '{{ "hoodie-01-main.jpg" | asset_url }}',
+        '{{ "hoodie-02-knuckles.jpg" | asset_url }}',
+        '{{ "hoodie-03-nail.jpg" | asset_url }}',
+        '{{ "hoodie-04-hem.jpg" | asset_url }}',
+        '{{ "hoodie-05-sleeve.jpg" | asset_url }}',
+        '{{ "hoodie-06-front.jpg" | asset_url }}'
+      ],
+      rows: [
+        ['FABRIC', '420 GSM brushed-back fleece'],
+        ['MADE OF', '80% cotton, 20% polyester'],
+        ['RIB', '95% cotton, 5% elastane'],
+        ['FIT', 'oversized, dropped shoulder'],
+        ['PRINT', 'knockout screen print, front + back'],
+        ['CARE', 'cold wash inside out, do not tumble dry'],
+        ['SHIPS', '3-5 days // worldwide'],
+        ['LENGTH', '~64 cm *'],
+        ['WIDTH', '~47 cm *'],
+        ['SLEEVE', '~62 cm *']
+      ]
+    }
+  };
+
+  // Populate from live Shopify catalog if products exist
+  const liveProducts = {};
+  {% for product in collections.all.products %}
+    {% assign key = product.metafields.zerolife.model_key | default: product.handle %}
+    liveProducts[{{ key | json }}] = {
+      id: {{ product.id | json }},
+      model_key: {{ key | json }},
+      handle: {{ product.handle | json }},
+      subject: {{ product.metafields.zerolife.subject_title | default: product.title | json }},
+      name: {{ product.title | json }},
+      file: {{ product.metafields.zerolife.file_code | default: 'FILE ZL-001' | json }},
+      line: {{ product.metafields.zerolife.lore_line | default: 'the human is the glitch.' | json }},
+      price: {{ product.price | money | json }},
+      price_numeric: {{ product.price | divided_by: 100.0 }},
+      sizes: [{% for variant in product.variants %}{{ variant.title | json }}{% unless forloop.last %},{% endunless %}{% endfor %}],
+      variants: {
+        {% for variant in product.variants %}
+          {{ variant.title | json }}: {
+            id: {{ variant.id | json }},
+            available: {{ variant.available | json }},
+            price: {{ variant.price | money | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      },
+      photo: {{ product.featured_image | image_url: width: 900, height: 900 | json }},
+      photos: [
+        {% for img in product.images %}
+          {{ img | image_url: width: 900, height: 900 | json }}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      rows: [
+        ['FABRIC', {{ product.metafields.zerolife.fabric | default: 'Heavyweight jersey' | json }}],
+        ['FIT', {{ product.metafields.zerolife.fit | default: 'Boxy, dropped shoulder' | json }}],
+        ['CARE', {{ product.metafields.zerolife.care | default: 'Cold wash inside out' | json }}],
+        ['SHIPS', '3-5 days // worldwide']
+      ]
+    };
+  {% endfor %}
+
+  // Merge live products with mock catalog fallbacks
+  window.ZL_PRODUCTS = Object.assign({}, mockCatalog, liveProducts);
+})();
+</script>

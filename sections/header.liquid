@@ -1,67 +1,41 @@
-<header class="w-full bg-black border-b border-white sticky top-0 z-40 px-6 py-4">
+{% comment %}
+  ZERØLIFE Responsive Machine Header
+{% endcomment %}
+<header class="w-full bg-[#0C0C0C]/90 border-b border-[#2a2c2e] sticky top-0 z-40 px-4 lg:px-8 py-3 backdrop-blur-md phosphor-text">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <!-- Brand / Logo -->
-    <a href="{{ routes.root_url }}" class="flex items-center">
-      <span class="text-lg font-mono font-bold tracking-widest text-white">ZEROLIFE</span>
+    
+    <!-- Brand Title -->
+    <a href="{{ routes.root_url }}" class="flex items-center gap-2 group">
+      <span class="font-human font-light text-xl tracking-tight text-[#E4DFD3] group-hover:text-white">ZERØLIFE</span>
+      <span class="font-mono text-[10px] text-[#8B9094] border border-[#2a2c2e] px-1 py-0.5">SYS // V2.0</span>
     </a>
 
-    <!-- Standard Nav Links (desktop only) -->
-    <nav class="hidden md:flex items-center gap-6 font-mono text-xs uppercase text-white">
-      {%- for link in linklists.main-menu.links -%}
-        <a href="{{ link.url }}" class="hover:underline {% if link.current %}underline font-bold{% endif %}">
-          {{ link.title }}
-        </a>
-      {%- else -%}
-        <a href="/" class="hover:underline">Home</a>
-        <a href="/collections/all" class="hover:underline">Catalog</a>
-        <a href="/pages/about" class="hover:underline">About</a>
-      {%- endfor -%}
+    <!-- Nav Links (Desktop) -->
+    <nav class="hidden md:flex items-center gap-6 font-mono text-xs uppercase text-[#BFC3C6]">
+      <a href="{{ routes.root_url }}" class="hover:text-[#E4DFD3] transition-colors {% if template.name == 'index' %}text-[#E4DFD3] underline underline-offset-4{% endif %}">
+        [ 01 // SHOWROOM ]
+      </a>
+      <a href="{{ routes.all_products_collection_url }}" class="hover:text-[#E4DFD3] transition-colors {% if template.name == 'collection' %}text-[#E4DFD3] underline underline-offset-4{% endif %}">
+        [ 02 // ARCHIVE ]
+      </a>
+      <button type="button" onclick="window.dispatchEvent(new CustomEvent('zerolife:open-root'))" class="hover:text-[#E4DFD3] transition-colors">
+        [ 03 // ROOT ]
+      </button>
     </nav>
 
     <!-- Header Actions -->
-    <div class="flex items-center gap-4">
-      <a href="/cart" class="font-mono text-xs uppercase text-white hover:underline">
-        CART [{{ cart.item_count }}]
-      </a>
-      
+    <div class="flex items-center gap-3">
+      <!-- Recovery Queue Trigger -->
+      <button type="button" onclick="document.getElementById('recovery-queue')?.classList.remove('hidden')" class="font-mono text-xs text-[#E4DFD3] border border-[#2a2c2e] hover:border-[#E4DFD3] bg-black/40 px-3 py-1.5 flex items-center gap-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#00ff66]"></span>
+        <span>QUEUE [{{ cart.item_count }}]</span>
+      </button>
+
       <!-- Mobile Menu Toggle Button -->
-      <button id="mobile-menu-toggle" class="block md:hidden text-white hover:opacity-80 focus:outline-none" aria-label="Toggle Menu">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-        </svg>
+      <button type="button" onclick="window.dispatchEvent(new CustomEvent('zerolife:open-root'))" class="md:hidden font-mono text-xs border border-[#2a2c2e] px-2.5 py-1.5 text-[#BFC3C6]" aria-label="Menu">
+        [ MENU ]
       </button>
     </div>
-  </div>
 
-  <!-- Mobile Drawer Menu (Initially Hidden) -->
-  <div id="mobile-menu-drawer" class="hidden md:hidden w-full bg-black border-t border-white absolute top-full left-0 px-6 py-4 space-y-4">
-    <nav class="flex flex-col gap-4 font-mono text-xs uppercase text-white">
-      {%- for link in linklists.main-menu.links -%}
-        <a href="{{ link.url }}" class="hover:underline {% if link.current %}underline font-bold{% endif %}">
-          {{ link.title }}
-        </a>
-      {%- else -%}
-        <a href="/" class="hover:underline">Home</a>
-        <a href="/collections/all" class="hover:underline">Catalog</a>
-        <a href="/pages/about" class="hover:underline">About</a>
-      {%- endfor -%}
-    </nav>
   </div>
 </header>
-
-<script>
-  // Simple toggle script for the bare-bones mobile menu
-  document.getElementById('mobile-menu-toggle')?.addEventListener('click', function() {
-    const drawer = document.getElementById('mobile-menu-drawer');
-    if (drawer) {
-      drawer.classList.toggle('hidden');
-    }
-  });
-</script>
-
-{% schema %}
-{
-  "name": "Header",
-  "settings": []
-}
-{% endschema %}

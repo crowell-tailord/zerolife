@@ -1,40 +1,48 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #ffffff;
-  --color-secondary: #a3a3a3;
-  --color-bg-primary: #000000;
-  --color-border-primary: #ffffff;
+  --color-void: #0C0C0C;
+  --color-bone: #E4DFD3;
+  --color-dark-bone: #C6C1B6;
+  --color-ash: #8B9094;
+  --color-machine-talk: #BFC3C6;
+  --color-machine-annotations: #63676A;
+  --color-line: #2a2c2e;
+  --font-machine: 'orator-std', 'Orator Std', 'Share Tech Mono', 'Courier New', monospace;
+  --font-human: 'Averia Serif Libre', Georgia, serif;
 }
 
 @layer base {
-  body {
-    background-color: #000000;
-    color: #ffffff;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  /* Sharp corners and white borders for all inputs, selects, and textareas */
+  html {
+    font-variant-numeric: slashed-zero;
+    background-color: #0C0C0C;
+    color: #E4DFD3;
+  }
+
+  body {
+    background-color: #0C0C0C;
+    color: #E4DFD3;
+    font-family: var(--font-machine);
+    overflow-x: hidden;
+  }
+
+  /* Sharp corners and hairlines for machine inputs */
   input, select, textarea {
-    background-color: #000000;
-    color: #ffffff;
-    border: 1px solid #ffffff;
+    background-color: #0C0C0C;
+    color: #E4DFD3;
+    border: 1px solid #2a2c2e;
     border-radius: 0px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family: var(--font-machine);
   }
 
   input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #a3a3a3;
-  }
-
-  /* Remove default webkit appearance from number inputs */
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  input[type="number"] {
-    -moz-appearance: textfield;
+    border-color: #E4DFD3;
   }
 }

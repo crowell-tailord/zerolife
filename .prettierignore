@@ -1,5 +1,7 @@
-node_modules/
-dist/
-assets/
-package.json
+node_modules
+dist
+build
+coverage
 package-lock.json
+.vscode
+.DS_Store

@@ -1,0 +1,182 @@
+<!-- ZERØLIFE Cyber Tokens & Phosphor Filter Snippet -->
+<link rel="stylesheet" href="https://use.typekit.net/aiz3fbt.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+  @font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('{{ "AveriaSerifLibre-Light.ttf" | asset_url }}') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('{{ "AveriaSerifLibre-Regular.ttf" | asset_url }}') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('{{ "AveriaSerifLibre-Italic.ttf" | asset_url }}') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Averia Serif Libre';
+    src: url('{{ "AveriaSerifLibre-Bold.ttf" | asset_url }}') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    color-scheme: only dark;
+    --void: #0C0C0C;
+    --bone: #E4DFD3;
+    --dark-bone: #C6C1B6;
+    --ash: #8B9094;
+    --machine-talk: #BFC3C6;
+    --machine-annotations: #63676A;
+    --line: #2a2c2e;
+    --px: 3px;
+    --font-machine: 'orator-std', 'Orator Std', 'Share Tech Mono', 'Courier New', monospace;
+    --font-human: 'Averia Serif Libre', Georgia, serif;
+    --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+    --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  html {
+    font-variant-numeric: slashed-zero;
+    -webkit-text-size-adjust: 100%;
+    background-color: var(--void);
+    color: var(--bone);
+  }
+
+  body {
+    background-color: var(--void);
+    color: var(--bone);
+    font-family: var(--font-machine);
+    font-size: 15px;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  /* Phosphor monitor blend & glow filters */
+  .phosphor-text {
+    filter: blur(0.45px);
+    mix-blend-mode: screen;
+  }
+
+  .phosphor-glow,
+  .phosphor-text h1,
+  .phosphor-text h2,
+  .phosphor-text h3,
+  .phosphor-text p,
+  .phosphor-text span,
+  .phosphor-text dt,
+  .phosphor-text dd,
+  .phosphor-text summary,
+  .phosphor-text th,
+  .phosphor-text td,
+  .phosphor-text a,
+  .phosphor-text button {
+    filter: drop-shadow(0 0 4px rgba(228, 223, 211, 0.35)) drop-shadow(0 0 12px rgba(228, 223, 211, 0.15));
+  }
+
+  /* Scanline subtle layer */
+  .scanlines-overlay {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--px) - 1px),
+      rgba(0, 0, 0, 0.22) calc(var(--px) - 1px),
+      rgba(0, 0, 0, 0.22) var(--px)
+    );
+  }
+
+  /* Machine action buttons */
+  .zl-btn {
+    font-family: var(--font-machine);
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    color: var(--bone);
+    background: transparent;
+    border: 1px solid var(--bone);
+    min-height: 48px;
+    padding: 12px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background 0.15s, outline 0.15s, border-color 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .zl-btn:hover,
+  .zl-btn:active,
+  .zl-btn.picked {
+    background: rgba(228, 223, 211, 0.08);
+    outline: 1px solid var(--bone);
+    outline-offset: 3px;
+  }
+
+  .zl-btn:focus-visible {
+    outline: 2px solid var(--bone);
+    outline-offset: 3px;
+  }
+
+  /* Glitch pulse and jolt */
+  @keyframes zl-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  @keyframes zl-jolt {
+    0% { transform: translateX(-3px); }
+    50% { transform: translateX(4px); }
+    100% { transform: translateX(-1px); }
+  }
+
+  .glitching {
+    animation: zl-jolt 0.09s steps(2) infinite;
+    text-shadow: -2px 0 rgba(255, 40, 80, 0.85), 2px 0 rgba(0, 230, 255, 0.85);
+  }
+
+  /* CRT status bar at bottom */
+  #queue-bar {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: rgba(12, 12, 12, 0.9);
+    border: 1px solid var(--machine-annotations);
+    font-family: var(--font-machine);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--bone);
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  #queue-bar[hidden] { display: none; }
+  #queue-bar:hover { border-color: var(--bone); }
+  #queue-bar .dot {
+    width: 6px;
+    height: 6px;
+    background: #00ff66;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #00ff66;
+    animation: zl-pulse 1.2s infinite;
+  }
+</style>
